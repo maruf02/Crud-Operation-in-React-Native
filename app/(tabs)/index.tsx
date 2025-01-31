@@ -14,7 +14,7 @@ export default function CrudApp() {
   const [text, setText] = useState<string>("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
-  // Add or Update Item
+  // Add or Update Item update and add
   const handleAddOrUpdate = (): void => {
     if (text.trim() === "") return;
 
