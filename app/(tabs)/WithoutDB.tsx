@@ -10,11 +10,15 @@ import {
 } from "react-native";
 import PropTypes from "prop-types"; // Import PropTypes
 
-function WithoutDB({ onClose }) {
-  // Add onClose prop here
-  const [items, setItems] = useState([]);
-  const [text, setText] = useState("");
-  const [editingIndex, setEditingIndex] = useState(null);
+// Define type for the props
+interface WithoutDBProps {
+  onClose: () => void; // onClose is a function that doesn't accept any parameters and doesn't return anything
+}
+
+export default function WithoutDB({ onClose }: WithoutDBProps) {
+  const [items, setItems] = useState<string[]>([]);
+  const [text, setText] = useState<string>("");
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   const handleAddOrUpdate = () => {
     if (text.trim() === "") return;
@@ -30,12 +34,12 @@ function WithoutDB({ onClose }) {
     setText("");
   };
 
-  const handleEdit = (index) => {
+  const handleEdit = (index: number) => {
     setText(items[index]);
     setEditingIndex(index);
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = (index: number) => {
     setItems(items.filter((_, i) => i !== index));
   };
 

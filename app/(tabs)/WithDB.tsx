@@ -11,14 +11,18 @@ import {
 import axios from "axios";
 import PropTypes from "prop-types"; // Import PropTypes
 
-const API_URL = "http://192.168.0.141:5000/api/items";
+const API_URL = "http://localhost:5000/api/items";
 
 type Item = { _id: string; name: string };
 
-function WithDB({ onClose }) {
-  // Add onClose prop here
+//  props type
+interface WithDBProps {
+  onClose: () => void;
+}
+
+export default function WithDB({ onClose }: WithDBProps) {
   const [items, setItems] = useState<Item[]>([]);
-  const [text, setText] = useState("");
+  const [text, setText] = useState<string>("");
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const fetchItems = async () => {
@@ -66,13 +70,34 @@ function WithDB({ onClose }) {
   };
 
   return (
-    <View style={stylesWithDB.container}>
-      {" "}
-      {/* Use styles from WithoutDB */}
-      <Text style={stylesWithDB.title}>Simple CRUD App</Text>{" "}
-      {/* Use styles from WithoutDB */}
-      {/* ... (rest of your WithDB component code) */}
-      <Button title="Close Modal" onPress={onClose} /> {/* Close button */}
+    <View style={styles.container}>
+      <Text style={styles.title}>Simple CRUD App</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter item..."
+        value={text}
+        onChangeText={setText}
+      />
+      <Button
+        title={editingId ? "Update Item" : "Add Item"}
+        onPress={handleAddOrUpdate}
+      />
+      <FlatList
+        data={items}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <Text>{item.name}</Text>
+            <TouchableOpacity onPress={() => handleEdit(item._id, item.name)}>
+              <Text style={styles.buttonText}>Edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleDelete(item._id)}>
+              <Text style={styles.buttonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+      <Button title="Close Modal" onPress={onClose} />
     </View>
   );
 }
@@ -84,20 +109,36 @@ WithDB.propTypes = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    padding: 20,
+    backgroundColor: "#f8f8f8",
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "bold",
-    marginBottom: 20,
+    textAlign: "center",
+    marginBottom: 10,
+    marginTop: 10,
   },
-  buttonContainer: {
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 5,
+    backgroundColor: "#fff",
+  },
+  item: {
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 5,
+    borderWidth: 1,
+    borderColor: "#ddd",
   },
-  buttonMargin: {
-    width: 10,
+  buttonText: {
+    color: "blue",
   },
 });
