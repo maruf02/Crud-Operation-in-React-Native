@@ -1,151 +1,85 @@
-import { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+// import { Button, StyleSheet, Text, View } from "react-native";
+
+// export default function CrudApp() {
+//   return (
+//     <View style={styles.container}>
+//       <Text style={styles.title}>Crud Without DB</Text>
+//       <Button title="Crud Without DB" onPress={() => {}} />
+//       <Button title="Crud With Mongo DB" onPress={() => {}} />
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({});
+
+import React, { useState } from "react";
+import { Button, StyleSheet, Text, View, Modal } from "react-native";
+import CrudWithoutDB from "./withoutDB";
+import CrudWithMongoDB from "./withDB";
 
 export default function CrudApp() {
-  const [items, setItems] = useState<string[]>([]);
-  const [text, setText] = useState<string>("");
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-
-  // Add or Update Item update and add
-  const handleAddOrUpdate = (): void => {
-    if (text.trim() === "") return;
-
-    if (editingIndex !== null) {
-      // Update item
-      const updatedItems = [...items];
-      updatedItems[editingIndex] = text;
-      setItems(updatedItems);
-      setEditingIndex(null);
-    } else {
-      // Add new item
-      setItems([...items, text]);
-    }
-    setText("");
-  };
-
-  // Edit Item
-  const handleEdit = (index: number): void => {
-    setText(items[index]);
-    setEditingIndex(index);
-  };
-
-  // Delete Item
-  const handleDelete = (index: number): void => {
-    setItems(items.filter((_, i) => i !== index));
-  };
+  const [isWithoutDBVisible, setWithoutDBVisible] = useState(false);
+  const [isWithDBVisible, setWithDBVisible] = useState(false);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Simple CRUD App</Text>
+      <Text style={styles.title}>Crud App</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Enter item..."
-        value={text}
-        onChangeText={setText}
-      />
-
-      {/* <Button
-        style={styles.addItem}
-        title={editingIndex !== null ? "Update Item" : "Add Item"}
-        onPress={handleAddOrUpdate}
-      /> */}
-      <View style={styles.addItem}>
+      <View style={styles.buttonContainer}>
+        {" "}
+        {/* Container for buttons */}
         <Button
-          title={editingIndex !== null ? "Update Item" : "Add Item"}
-          onPress={handleAddOrUpdate}
+          title="Crud Without DB"
+          onPress={() => setWithoutDBVisible(true)}
+        />
+        <View style={styles.buttonMargin} />{" "}
+        {/* Add some space between buttons */}
+        <Button
+          title="Crud With Mongo DB"
+          onPress={() => setWithDBVisible(true)}
         />
       </View>
 
-      <FlatList
-        data={items}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={styles.item}>
-            <Text style={styles.itemText}>{item}</Text>
-            <View style={styles.buttons}>
-              <TouchableOpacity
-                onPress={() => handleEdit(index)}
-                style={styles.editButton}
-              >
-                <Text style={styles.buttonText}>Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleDelete(index)}
-                style={styles.deleteButton}
-              >
-                <Text style={styles.buttonText}>Delete</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-      />
+      {/* Modal for CrudWithoutDB */}
+      <Modal
+        visible={isWithoutDBVisible}
+        animationType="slide"
+        onRequestClose={() => setWithoutDBVisible(false)}
+      >
+        <CrudWithoutDB onClose={() => setWithoutDBVisible(false)} />
+        {/* Pass a close function */}
+      </Modal>
+
+      {/* Modal for CrudWithMongoDB */}
+      <Modal
+        visible={isWithDBVisible}
+        animationType="slide"
+        onRequestClose={() => setWithDBVisible(false)}
+      >
+        <CrudWithMongoDB onClose={() => setWithDBVisible(false)} />
+        {/* Pass a close function */}
+      </Modal>
     </View>
   );
 }
 
-// Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#fff",
+    alignItems: "center", // Center horizontally
+    justifyContent: "center", // Center vertically
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 10,
-    marginTop: 10,
+    marginBottom: 20,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-    backgroundColor: "#fff",
+  buttonContainer: {
+    flexDirection: "row", // Arrange buttons horizontally
+    alignItems: "center", // Center buttons vertically within the container
   },
-  addItem: {
-    marginBottom: 10,
-  },
-  item: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 5,
-    borderWidth: 1,
-    borderColor: "#ddd",
-  },
-  itemText: {
-    fontSize: 16,
-  },
-  buttons: {
-    flexDirection: "row",
-  },
-  editButton: {
-    backgroundColor: "blue",
-    padding: 5,
-    borderRadius: 5,
-    marginRight: 5,
-  },
-  deleteButton: {
-    backgroundColor: "red",
-    padding: 5,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "white",
+  buttonMargin: {
+    width: 10, // Adjust the width for spacing
   },
 });
