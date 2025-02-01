@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import PropTypes from "prop-types"; // Import PropTypes
 
-const API_URL = "http://localhost:5000/api/items";
+// const API_URL = "http://localhost:5000/api/items";
 
 type Item = { _id: string; name: string };
 

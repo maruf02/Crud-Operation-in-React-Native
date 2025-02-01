@@ -4,16 +4,50 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 ## Get started
 
-1. Install dependencies
+1. Clone the repo
+
+   ```bash
+   git clone https://github.com/maruf02/Crud-Operation-in-React-Native.git
+   ```
+
+2. Install dependencies
 
    ```bash
    npm install
    ```
 
-2. Start the app
+3. Open your Vs Code Editor
 
    ```bash
-    npx expo start
+   code .
+   ```
+
+4. go to Backend folder for install api and Db Service
+
+   ```bash
+   cd Backend
+   then
+   npm install
+   ```
+
+5. go to Backend folder create `.env` file and give your credential
+
+   ```bash
+   NODE_ENV=production
+   PORT=5000
+   DATABASE_URL=<YOUR_DB_URL>
+   ```
+
+6. Start the Backend
+
+   ```bash
+    npm run start:dev
+   ```
+
+7. Go to WihoutDB file and give your ip also in backend add your Ip in `cors`. then start the project
+
+   ```bash
+    npm start
    ```
 
 In the output, you'll find options to open the app in a
